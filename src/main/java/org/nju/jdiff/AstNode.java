@@ -14,6 +14,6 @@ public class AstNode {
     @Override
     public String toString() {
 
-        return String.format("id:%s type:%s code:%s", this.id,this.type,this.code);
+        return String.format("id:%s type:%s code:%s", this.id,this.type,this.code.replace("\n",""));
     }
 }
