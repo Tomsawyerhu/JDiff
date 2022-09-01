@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="jdiff:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/jdiff_jar</output-path>
+    <root id="archive" name="jdiff.jar">
+      <element id="module-output" name="jdiff" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/javaparser/javaparser-core/3.24.2/javaparser-core-3.24.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
