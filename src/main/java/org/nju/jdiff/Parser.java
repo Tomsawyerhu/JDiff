@@ -11,12 +11,17 @@ import java.util.stream.Collectors;
 
 public class Parser {
     public static void main(String[] args) {
-        //bug_input_code fix_input_code (true/false)
-        if(args.length<2){
+        //diff_strategy bug_input_code fix_input_code (true/false)
+        if(args.length<3){
             System.err.println("not enough params");
             return;
         }
-        String javaFile1=args[0],javaFile2=args[1];
+        int strategy=Integer.parseInt(args[0]);
+        if(strategy> TreeDiff.DiffStrategy.STRATEGY_NUM || strategy<0){
+            System.err.println("no such diff strategy");
+            return;
+        }
+        String javaFile1=args[1],javaFile2=args[2];
         if(!javaFile1.endsWith(".java") || !javaFile2.endsWith(".java")){
             System.err.println("input file must end with .java");
             return;
@@ -37,7 +42,7 @@ public class Parser {
         CompilationUnit cu2 = StaticJavaParser.parse(code2);
 
         //diff
-        TreeDiff.DiffResult result= TreeDiff.diff(cu1,cu2);
+        TreeDiff.DiffResult result= new TreeDiff(strategy).diff(cu1,cu2);
         System.out.println("----------------------- bug -----------------------");
         System.out.println(result.buggySnippet==null?"":result.buggySnippet.toString());
         System.out.println("----------------------- fix -----------------------");
@@ -61,7 +66,7 @@ public class Parser {
         output(edges2,outputEdges2,nodes2,outputNodes2);
 
         //output context(optional)
-        if(args.length>=3&&Boolean.parseBoolean(args[2])){
+        if(args.length>=4&&Boolean.parseBoolean(args[3])){
             System.out.println("----------------------- context -----------------------");
             System.out.println(result.context==null?"":result.context.toString());
             TreeVisit.VisitResult result3= TreeVisit.visitTree(result.context);
