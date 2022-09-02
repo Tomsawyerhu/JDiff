@@ -105,30 +105,39 @@ public class TreeDiff {
                     // match from left
                     // X0 O0 X1 X2 X3
                     // O0 X1 X2 O1 O2 X3
-                    // should be X X from offset=2
-                    int p,q = 0;
-                    boolean found=false;
-                    for(p=offset1;p<length1-offset2;p++){
-                        for(q=offset1;q<length2-offset2;q++){
-                            if(matches(getNthChild(bug,p),getNthChild(fix,q))){
-                                found=true;
+                    // should be O0,X1 X2,X3
+                    int p=offset1,q = offset1;
+                    int lastP;
+                    int lastQ;
+                    while(true) {
+                        boolean found = false;
+                        lastP=p;
+                        lastQ=q;
+                        for (; p < length1 - offset2; p++) {
+                            for (q=lastQ; q < length2 - offset2; q++) {
+                                if (matches(getNthChild(bug, p), getNthChild(fix, q))) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (found) break;
+                        }
+
+                        for (int k = lastP; k < p; k++) {
+                            removeFromCtx.add(getNthChild(ctx, k));
+                        }
+
+                        while (found && p < length1 - offset2 && q < length2 - offset2) {
+                            if (matches(getNthChild(bug, p), getNthChild(fix, q))) {
+                                removeFromBuggy.add(getNthChild(bug, p));
+                                removeFromFixed.add(getNthChild(fix, q));
+                                p += 1;
+                                q += 1;
+                            } else {
                                 break;
                             }
                         }
-                        if(found)break;
-                    }
-
-                    for(int k=offset1;k<p;k++){
-                        removeFromCtx.add(getNthChild(ctx, k));
-                    }
-
-                    while(found&&p<length1-offset2&&q<length2-offset2){
-                        if(matches(getNthChild(bug,p),getNthChild(fix,q))){
-                            removeFromBuggy.add(getNthChild(bug,p));
-                            removeFromFixed.add(getNthChild(fix,q));
-                            p+=1;
-                            q+=1;
-                        }else{
+                        if(!found){
                             break;
                         }
                     }
